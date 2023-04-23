@@ -226,7 +226,8 @@ int main() {
 		model.optimize(); // Magic
 
 
-		//PRINTING OUT RESULTS - Code below is not necessary for actual use of algorithm, in actual application this is replaced by code to make the file that is then sent back to the server with all the assignments
+		//PRINTING OUT RESULTS - Code below is not necessary for actual use of algorithm, in actual application this is replaced 
+		// by code to make the file that is then sent back to the server with all the assignments
 
 		vector<vector<int>> resultV; // resultV[r][arb] means that the arb-th person in role r -> i
 		vector<int> resultVrev; // resultVrev[i] is the role that person i is in
