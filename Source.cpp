@@ -8,6 +8,8 @@
 #include <random>
 #include <algorithm>
 #include <iterator>
+#include "Input.h"
+#include "Output.h"
 
 using namespace std;
 
