@@ -27,7 +27,7 @@ void Output::outputArray(ofstream& fout, vector<int> resultVrev, int N) {
 	fout << "data = {'matches': [" << endl;
 	for (int i = 0; i < N; i++) {
 
-		fout << "\t{'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
+		fout << " {'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
 
 		if (i != N - 1) {
 			fout << ",";
@@ -49,7 +49,7 @@ void Output::outputArray(vector<int> resultVrev, int N) {
 	cout << "data = {'matches': [" << endl;
 	for (int i = 0; i < N; i++) {
 
-		cout << "\t{'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
+		cout << " {'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
 
 		if (i != N - 1) {
 			cout << ",";
