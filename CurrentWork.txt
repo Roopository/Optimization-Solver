@@ -1,0 +1,11 @@
+Placeholder values currently for maximum/minimum number of flights that a person can be a part of
+	Either change to +/- 1 from the overall average roles that a person will be a part of
+	Or 
+	Get it from somewhere else, but this is far off as it requires new information to be given from the server side
+		Another part is the o < 4 part in the for loops, this also needs to be automated to max_i + 1
+
+Nonpref roles need to be gotten from somewhere also a server side change
+
+Delta values are the same way
+
+
