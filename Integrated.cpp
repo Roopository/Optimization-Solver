@@ -76,16 +76,31 @@ int main() {
 
 		Output output;
 
-		cout << "WF4 " << "Enter Filename: ";
+		cout << endl << "Enter Input Filename: ";
 		string filename;
 
 		cin >> filename;
 
 		cout << endl;
 
+		cout << endl << "Enter Output Filename: ";
+		string filenameO;
+
+		cin >> filenameO;
+
+		cout << endl;
+
 		//char* filename = argv[1];
 		fin.open(filename);
 		if (!fin.is_open()) {
+			cout << "Error opening file" << endl;
+			int x = 0;
+			cin >> x;
+			return(1);
+		}
+
+		fout.open(filenameO);
+		if (!fout.is_open()) {
 			cout << "Error opening file" << endl;
 			int x = 0;
 			cin >> x;
@@ -339,19 +354,42 @@ int main() {
 		if (model.get(GRB_IntAttr_Status) == GRB_OPTIMAL) {
 			cout << "Total objective value: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
 			for (int i = 0; i < N; i++) {
-				cout << "Person " << i << " assigned to role of index ";
 				for (int r = 0; r < T; r++) {
 					if (!(wVar[i][r].get(GRB_DoubleAttr_X) == 0)) {
-						cout << r << " ";
+						
 						resultVrev[i].push_back(r);
 						resultV[r].push_back(i);
 					}
 				}
+			}
+			for (int ii = 0; ii < N; ii++) {
+				if (ii < 10) { cout << "  "; }
+				else if (ii < 100) { cout << " "; }
+				cout << "Person " << ii << " assigned to role of index |";
+				for (int arb = 0; arb < static_cast<int>(resultVrev[ii].size()); arb++) {
+					cout << " " << resultVrev[ii][arb];
+					if (resultVrev[ii][arb] < 10) { cout << "   "; }
+					else if (resultVrev[ii][arb] < 100) { cout << "  "; }
+					else if (resultVrev[ii][arb] < 1000) { cout << " "; }
+					if (inVector(prefRoles[ii], resultVrev[ii][arb])) {
+						cout << "P";
+					}
+					else { cout << " "; }
+					if (inVector(preference[ii], resultV[resultVrev[ii][arb] + (1 + (2 * (-1) * (resultVrev[ii][arb] % 2)))][0])) {
+						cout << "P";
+					}
+					else { cout << " "; }
+
+					cout << "|";
+
+				}
 				cout << endl;
 			}
 		}
-
+		
 		output.outputArray(resultVrev, N);
+		output.outputArray(fout, resultVrev, N);
+		
 	}
 	catch (GRBException e) {
 		cout << "Error code = " << e.getErrorCode() << endl;
