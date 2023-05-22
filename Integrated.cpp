@@ -41,7 +41,7 @@ public:
 	vector<int> prefSize; // size of person i's preference for other people  NOT DONE
 	vector<vector<int>> prefRoles; // R_i  DONE
 	vector<vector<int>> nonprefRoles; // R_i^N  EXTERNAL
-	vector<vector<int>> indifRoles; // epsilon - R_i U R_i^N  QUESTIONABLE
+	//vector<vector<int>> indifRoles; // epsilon - R_i U R_i^N  QUESTIONABLE
 	vector<int> maxGroup; // max members in group j  TOTAL SET ALL TO 2 
 	vector<int> minGroup; // min members in group j  TOTAL SET ALL TO 2
 	vector<int> maxRole; // max members in role r   TOTAL  SET ALL TO 1
@@ -142,6 +142,19 @@ int main() {
 		groupRoles = input.groupRoles;
 		delta = input.delta;
 		nonprefRoles = input.nonprefRoles;
+		
+		// This is to make sure that all the pilots are added to a specific number of flights that is +/- 1 the average number of flights per pilot
+		// Implementation may change because of other flight restrictions
+		int max = 0;
+		int min = 0;
+
+		max = (T / N) + 1;
+		min = (T / N);
+
+		vector<int> max_i;
+		max_i.resize(N, max);
+		vector<int> min_i;
+		min_i.resize(N, min);
 
 
 		const double ALPHA = 0.5;
@@ -177,7 +190,7 @@ int main() {
 		vector<vector<GRBVar>> zVar;
 		for (int i = 0; i < N; i++) {
 			zVar.push_back(vector<GRBVar>());
-			for (int arb = 0; arb < 4; arb++) {
+			for (int arb = 0; arb < max_i[i]; arb++) {
 				zVar[i].push_back(model.addVar(0.0, 1.0, 1.0, GRB_BINARY));
 			}
 		}
@@ -237,7 +250,7 @@ int main() {
 			for (int j = 0; j < T; j++) { 
 				constringrL += wVar[i][j]; 
 			}
-			model.addConstr(constringrL, GRB_LESS_EQUAL, 3); // ONLY FOR THIS CASE
+			model.addConstr(constringrL, GRB_LESS_EQUAL, max_i[i]); // ONLY FOR THIS CASE
 		}
     
     
@@ -247,7 +260,7 @@ int main() {
 			for (int j = 0; j < T; j++) { // CHANGED FROM XVAR TO WVAR 
 				constringrG += wVar[i][j]; // CHANGED FROM XVAR TO WVAR
 			}
-			model.addConstr(constringrG, GRB_GREATER_EQUAL, 2); // ONLY FOR THIS CASE
+			model.addConstr(constringrG, GRB_GREATER_EQUAL, min_i[i]); // ONLY FOR THIS CASE
 		}
 
     
@@ -255,7 +268,7 @@ int main() {
 		for (int i = 0; i < N; i++) {
 			GRBLinExpr constrprefppl = 0;
 			if (prefSize[i] > 0) {
-				for (int o = 0; o < 4; o++) { // CHANGED TO 4 (1+MAXIMUM NUMBER OF GROUPS POSSIBLE) NEED TO AUTOMATE THIS
+				for (int o = 0; o < max_i[i]; o++) { 
 					constrprefppl += zVar[i][o];
 				}
 			}
@@ -273,7 +286,7 @@ int main() {
 				constrprefpplconnL += yVar[i][arb];
 			}
 			GRBLinExpr constrprefpplconnR = 0;
-			for (int o = 0; o < 4; o++) { // ALSO CHANGED TO 4 SAME AS ABOVE
+			for (int o = 0; o < max_i[i]; o++) { 
 				constrprefpplconnR += (o) * (zVar[i][o]);
 			}
 			model.addConstr(constrprefpplconnL, GRB_EQUAL, constrprefpplconnR);
@@ -296,7 +309,7 @@ int main() {
 			for (int j = 0; j < M; j++) {
 				constrinrlL += xVar[i][j];
 			}
-			model.addConstr(constrinrlL, GRB_LESS_EQUAL, 3); // CHANGED TO 2 VERSIONS (GREATER THAN)
+			model.addConstr(constrinrlL, GRB_LESS_EQUAL, max_i[i]); // CHANGED TO 2 VERSIONS (GREATER THAN)
 		}
 
     
@@ -306,7 +319,7 @@ int main() {
 			for (int j = 0; j < M; j++) {
 				constrinrlG += xVar[i][j];
 			}
-			model.addConstr(constrinrlG, GRB_GREATER_EQUAL, 2); // CHANGED TO 2 VERSIONS (LESS THAN)
+			model.addConstr(constrinrlG, GRB_GREATER_EQUAL, min_i[i]); // CHANGED TO 2 VERSIONS (LESS THAN)
 		}
     
     
