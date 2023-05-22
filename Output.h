@@ -16,53 +16,75 @@ public:
 
 	Output() {}; // No ADT's required so no need for anything besides the default constructor
 
-	void outputArray(ofstream& fout, vector<int> resultVrev, int N); // For when outputting to an outside file
-	void outputArray(vector<int> resultVrev, int N); // For when outputting to the console
+	void outputArray(ofstream& fout, vector<vector<int>> resultVrev, int N); // For when outputting to an outside file
+	void outputArray(vector<vector<int>> resultVrev, int N); // For when outputting to the console
 
 };
 
 
 
-void Output::outputArray(ofstream& fout, vector<int> resultVrev, int N) {
-	fout << "data = {'matches': [" << endl;
+void Output::outputArray(ofstream& fout, vector<vector<int>> resultVrev, int N) {
+	fout << "data = {'matchs': [" << endl << "    ";
+	int count = 0;
 	for (int i = 0; i < N; i++) {
 
-		fout << " {'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
+		for (int j = 0; j < static_cast<int>(resultVrev[i].size()); j++) {
+			count++;
 
-		if (i != N - 1) {
-			fout << ",";
-		}
-		else {
-			fout << "]";
-		}
+			fout << "    {'pilot_id': " << i << ", 'role_id': " << resultVrev[i][j] % 2 << ", 'flight_id': " << resultVrev[i][j] / 2 << "}"; // ONLY WORKS BECAUSE THE FLIGHTS ALL HAVE 2 ROLES
 
-		if (i % 2 == 1) {
-			fout << endl;
+			if (i != N - 1) {
+				fout << ",";
+				if ((count % 2 == 0)) {
+					fout << endl << "    ";
+				}
+			}
+			else {
+				if (j == static_cast<int>(resultVrev[i].size()) - 1) {
+					fout << "]";
+				}
+				else {
+					fout << ",";
+					if ((count % 2 == 0)) {
+						fout << endl << "    ";
+					}
+				}
+			}
 		}
-
 	}
-
-	fout << "}" << endl;
+	
+	fout << endl << "}" << endl;
 }
 
-void Output::outputArray(vector<int> resultVrev, int N) {
-	cout << "data = {'matches': [" << endl;
+void Output::outputArray(vector<vector<int>> resultVrev, int N) {
+	cout << "data = {'matchs': [" << endl << "    ";
+	int count = 0;
 	for (int i = 0; i < N; i++) {
 
-		cout << " {'pilot_id': " << i << ", 'role_id': " << resultVrev[i] << ", 'flight_id': " << resultVrev[i] / 2 << "}";
+		for (int j = 0; j < static_cast<int>(resultVrev[i].size()); j++) {
+			count++;
 
-		if (i != N - 1) {
-			cout << ",";
+			cout << "    {'pilot_id': " << i << ", 'role_id': " << resultVrev[i][j] % 2 << ", 'flight_id': " << resultVrev[i][j] / 2 << "}"; // ONLY WORKS BECAUSE THE FLIGHTS ALL HAVE 2 ROLES
+			
+			if (i != N - 1) {
+				cout << ",";
+				if ((count % 2 == 0)) {
+					cout << endl << "    ";
+				}
+			}
+			else {
+				if (j == static_cast<int>(resultVrev[i].size()) - 1) {
+					cout << "]";
+				}
+				else {
+					cout << ",";
+					if ((count % 2 == 0)) {
+						cout << endl << "    ";
+					}
+				}
+			}
 		}
-		else {
-			cout << "]";
-		}
-
-		if (i % 2 == 1) {
-			cout << endl;
-		}
-
 	}
 
-	cout << "}" << endl;
+	cout << endl << "}" << endl;
 }
